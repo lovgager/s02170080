@@ -24,7 +24,7 @@ namespace ImageRecognition
         public static readonly ConcurrentQueue<string> predictionOutputs 
                 = new ConcurrentQueue<string>();
                 
-        public static CancellationTokenSource cts = new CancellationTokenSource();
+        public static readonly CancellationTokenSource cts = new CancellationTokenSource();
 
         public static void processImage(string path)
         {
