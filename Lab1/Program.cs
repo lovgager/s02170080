@@ -21,6 +21,7 @@ namespace Lab1
         {
             string path = "images";
             int tasksCount = 4;
+            bool done = false;
             if (args.Length > 0) path = args[0];
             if (args.Length > 1) tasksCount = Int32.Parse(args[1]);
 
@@ -39,12 +40,12 @@ namespace Lab1
                 ImageResult predictionOutput;
                 while (true) 
                 {
+                    if (ImageClassifier.cts.Token.IsCancellationRequested || done) 
+                    {
+                        return;
+                    }
                     if (ImageClassifier.predictionOutputs.TryDequeue(out predictionOutput))
                     {
-                        if (ImageClassifier.cts.Token.IsCancellationRequested) 
-                        {
-                            return;
-                        }
                         Console.WriteLine(predictionOutput);
                     }
                 }
@@ -54,7 +55,10 @@ namespace Lab1
             if (!ImageClassifier.cts.IsCancellationRequested)
             {
                 Console.WriteLine("Done");
+                done = true;
             }
+
+            await extractResults;
 
             watch.Stop();
             Console.WriteLine($"{watch.ElapsedMilliseconds} elapsed milliseconds");
