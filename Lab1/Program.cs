@@ -36,7 +36,7 @@ namespace Lab1
             });
 
             Task extractResults = Task.Run(() => {
-                string predictionOutput;
+                ImageResult predictionOutput;
                 while (true) 
                 {
                     if (ImageClassifier.predictionOutputs.TryDequeue(out predictionOutput))

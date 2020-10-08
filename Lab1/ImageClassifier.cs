@@ -21,8 +21,8 @@ namespace ImageRecognition
         private static readonly string[] classLabels = 
                 System.IO.File.ReadAllLines("classLabels.txt");
 
-        public static readonly ConcurrentQueue<string> predictionOutputs 
-                = new ConcurrentQueue<string>();
+        public static readonly ConcurrentQueue<ImageResult> predictionOutputs 
+                = new ConcurrentQueue<ImageResult>();
                 
         public static readonly CancellationTokenSource cts = new CancellationTokenSource();
 
@@ -71,16 +71,14 @@ namespace ImageRecognition
 
                 lock (lockObj) 
                 {
-                    string predictionOutput = "";
                     foreach (var p in softmax
                             .Select((x, i) => new { Label = classLabels[i], Confidence = x })
                             .OrderByDescending(x => x.Confidence)
-                            .Take(3))
-                        predictionOutput += $"{p.Label} with confidence {p.Confidence}\n";
-                    predictionOutputs.Enqueue(predictionOutput);
+                            .Take(1))
+                        predictionOutputs.Enqueue(new ImageResult(path, p.Label, p.Confidence));
                 }
             } catch (Exception) {
-                predictionOutputs.Enqueue("Error on processing file " + path);
+                predictionOutputs.Enqueue(new ImageResult(path));
             }
         }
 
