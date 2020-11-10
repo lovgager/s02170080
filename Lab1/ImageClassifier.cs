@@ -62,7 +62,7 @@ namespace ImageRecognition
                     NamedOnnxValue.CreateFromTensor("input", input)
                 };
 
-                using var session = new InferenceSession("../../../shufflenet-v2-10.onnx");
+                using var session = new InferenceSession("shufflenet-v2-10.onnx");
                 using IDisposableReadOnlyCollection<DisposableNamedOnnxValue> results = session.Run(inputs);
 
                 var output = results.First().AsEnumerable<float>().ToArray();
